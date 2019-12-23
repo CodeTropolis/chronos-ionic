@@ -7,8 +7,16 @@
 </ion-header>
 
 <ion-content>
-  <div class="ion-padding">
-    The world is your oyster.
-    <p>If you get lost, the <a target="_blank" rel="noopener" href="https://ionicframework.com/docs/">docs</a> will be your guide.</p>
-  </div>
+ <!-- contentHeight="auto" Fix issue with calendar not rendering upon initial load -->
+  <full-calendar #cal
+  defaultView="dayGridMonth"
+  [plugins]="calendarPlugins"
+  [weekends]="true"
+  [events]= 'events'
+  contentHeight="auto"
+  [editable] = 'true'
+  (dateClick)="handleDateClick($event)" 
+  (eventDragStop)='eventDragStop($event)'
+></full-calendar>
+
 </ion-content>
