@@ -12,7 +12,7 @@ export class HomePage {
 
   calendarPlugins = [dayGridPlugin, interactionPlugin];
   events = [
-    { title: 'event 1', date: '2019-12-01' },
+    { title: 'event 1', date: '2019-12-01',  backgroundColor: 'lightblue', },
     { title: 'event 2', date: '2019-12-02' }
   ];
 
@@ -23,7 +23,11 @@ export class HomePage {
   }
 
   eventDragStop(e) {
-    console.log(e);
+    console.log(`event object:`, e.event);
+  }
+
+  eventResizeStop(e){
+    console.log('eventResizeStop: ', e);
   }
 
 }
