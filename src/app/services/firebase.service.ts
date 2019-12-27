@@ -8,10 +8,11 @@ import { Observable } from 'rxjs';
 export class FirebaseService {
 
   eventsCollection: AngularFirestoreCollection<any[]>;
+  events: Observable<any[]>;
 
-  constructor(private afs: AngularFirestore) {
-
-    this.eventsCollection = this.afs.collection('events');
+  constructor(private db: AngularFirestore) {
+    this.eventsCollection =  this.db.collection('events');
+    this.events = this.db.collection('events').valueChanges({idField: 'docId' });
 
   }
 }

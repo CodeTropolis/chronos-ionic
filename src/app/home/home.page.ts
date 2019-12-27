@@ -1,29 +1,35 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 //https://www.npmjs.com/package/@fullcalendar/interaction
 import interactionPlugin from '@fullcalendar/interaction';
+import { FirebaseService } from '../services/firebase.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
 
   calendarPlugins = [dayGridPlugin, interactionPlugin];
-  events = [
-    { title: 'event 1', date: '2019-12-01',  backgroundColor: 'lightblue', },
-    { title: 'event 2', date: '2019-12-02' }
-  ];
+  events: any[] = [];
 
-  constructor() {}
+  constructor(private firebaseService: FirebaseService) {}
 
-  handleDateClick(arg) { // handler method
-    alert(arg.dateStr);
+  ngOnInit() {
+    this.firebaseService.events.subscribe(events => {
+      this.events = events;
+      console.log(`MD: HomePage -> ngOnInit -> events`, events);
+    });
+  }
+
+  handleDateClick(arg) {
+    // alert(arg.dateStr);
   }
 
   eventDragStop(e) {
-    console.log(`event object:`, e.event);
+    console.log(`drag stop:`, e);
+    // this.firebaseService.eventsCollection.doc(e.event.extendedProps.docId).update({start: e.event.start, end: e.event.end});
   }
 
   eventResizeStop(e){
