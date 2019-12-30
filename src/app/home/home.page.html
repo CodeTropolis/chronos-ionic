@@ -11,13 +11,14 @@
   <full-calendar #cal
   defaultView="dayGridMonth"
   [plugins]="calendarPlugins"
-  [weekends]="true"
-  [events]= 'events'
-  contentHeight="auto"
   [editable] = 'true'
+  [events]= 'events'
+  [weekends]="true"
+  contentHeight="auto"
   (dateClick)="handleDateClick($event)" 
-  (eventDragStop)='eventDragStop($event)'
   (eventResizeStop)='eventResizeStop($event)'
+  (eventResize)='eventResize($event)'
+  (eventDrop)='eventDrop($event)'
 ></full-calendar>
 
 </ion-content>
