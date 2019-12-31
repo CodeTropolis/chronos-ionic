@@ -1,10 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
-//https://www.npmjs.com/package/@fullcalendar/interaction
 import interactionPlugin from '@fullcalendar/interaction';
 import { FirebaseService } from '../services/firebase.service';
-// import momentPlugin from '@fullcalendar/moment';
-// import { toMoment, toDuration } from '@fullcalendar/moment';
 import * as moment from 'moment';
 
 @Component({
@@ -17,8 +14,8 @@ export class HomePage implements OnInit {
   calendarPlugins = [
     dayGridPlugin,
     interactionPlugin,
-    // momentPlugin
   ];
+
   events: any[] = [];
 
   constructor(private firebaseService: FirebaseService) {}
@@ -26,7 +23,6 @@ export class HomePage implements OnInit {
   ngOnInit() {
     this.firebaseService.events.subscribe(events => {
       this.events = events;
-      console.log(`MD: HomePage -> ngOnInit -> events`, events);
     });
   }
 
@@ -35,18 +31,13 @@ export class HomePage implements OnInit {
   eventDragStop(e) {}
 
   eventDrop(e) {
-    // const eStart = moment(e.event.start).format('YYYY-MM-DD HH:mm');
-    const start = moment(e.event.start).format('YYYY-MM-DD');
-    const end = moment(e.event.end).format('YYYY-MM-DD');
+    const start = this.momentDate(e.event.start);
+    const end = this.momentDate(e.event.end);
     const updatedEvent = {
       start,
       end
     };
     this.firebaseService.eventsCollection.doc(e.event.extendedProps.docId).update(updatedEvent);
-  }
-
-  eventResizeStop(e){
-    // console.log('eventResizeStop: ', e);
   }
 
   eventResize(e) {
@@ -56,6 +47,16 @@ export class HomePage implements OnInit {
       end
     };
     this.firebaseService.eventsCollection.doc(e.event.extendedProps.docId).update(updatedEvent);
+  }
+
+  eventResizeStop(e){}
+
+  momentDate(date) {
+    return moment(date).format('YYYY-MM-DD');
+  }
+
+  momentDateTime(date) {
+    return moment(date).format('YYYY-MM-DD HH:mm');
   }
 
 }
