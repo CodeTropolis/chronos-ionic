@@ -3,6 +3,8 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { FirebaseService } from '../services/firebase.service';
 import * as moment from 'moment';
+import { ModalController } from '@ionic/angular';
+import { AddEventPage } from '../modals/add-event/add-event.page';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +20,7 @@ export class HomePage implements OnInit {
 
   events: any[] = [];
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(private firebaseService: FirebaseService,  private modalController: ModalController) {}
 
   ngOnInit() {
     this.firebaseService.events.subscribe(events => {
@@ -41,8 +43,7 @@ export class HomePage implements OnInit {
   }
 
   eventResize(e) {
-    console.log(`MD: HomePage -> eventResize -> info`, e);
-    const end = moment(e.event.end).format('YYYY-MM-DD');
+    const end = this.momentDate(e.event.end);
     const updatedEvent = {
       end
     };
@@ -51,12 +52,21 @@ export class HomePage implements OnInit {
 
   eventResizeStop(e){}
 
-  momentDate(date) {
+  momentDate(date: string) {
     return moment(date).format('YYYY-MM-DD');
   }
 
-  momentDateTime(date) {
+  momentDateTime(date: string) {
     return moment(date).format('YYYY-MM-DD HH:mm');
+  }
+
+
+  async presentAddEventModal() {
+    const modal = await this.modalController.create({
+      component:  AddEventPage,
+      cssClass: 'add-event-modal' // Must be defined in global.scss
+    });
+    return await modal.present();
   }
 
 }

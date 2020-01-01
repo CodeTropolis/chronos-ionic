@@ -14,10 +14,12 @@ import { environment } from '../environments/environment';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AddEventPage } from './/modals/add-event/add-event.page';
+
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [AppComponent, AddEventPage],
+  entryComponents: [AddEventPage],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
