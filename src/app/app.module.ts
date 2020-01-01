@@ -15,6 +15,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AddEventPage } from './/modals/add-event/add-event.page';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -26,7 +27,9 @@ import { AddEventPage } from './/modals/add-event/add-event.page';
     AngularFireAuthModule,
     BrowserModule,
     IonicModule.forRoot(),
-    AppRoutingModule],
+    AppRoutingModule,
+    ReactiveFormsModule,
+  ],
   providers: [
     StatusBar,
     SplashScreen,

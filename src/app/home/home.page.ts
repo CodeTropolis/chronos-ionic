@@ -28,9 +28,13 @@ export class HomePage implements OnInit {
     });
   }
 
-  handleDateClick(arg) {}
+  dateClick(arg) {
+    console.log(`MD: HomePage -> dateClick -> arg`, arg);
+  }
 
-  eventDragStop(e) {}
+  eventClick(arg) {
+    console.log(`MD: HomePage -> eventClick -> arg`, arg);
+  }
 
   eventDrop(e) {
     const start = this.momentDate(e.event.start);
@@ -41,6 +45,8 @@ export class HomePage implements OnInit {
     };
     this.firebaseService.eventsCollection.doc(e.event.extendedProps.docId).update(updatedEvent);
   }
+
+  eventDragStop(e) {}
 
   eventResize(e) {
     const end = this.momentDate(e.event.end);
