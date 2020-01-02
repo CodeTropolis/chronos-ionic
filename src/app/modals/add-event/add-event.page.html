@@ -1,10 +1,10 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>add-event</ion-title>
+    <ion-title>Add Event</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
   <form [formGroup]="eventForm" #formDirective="ngForm" (ngSubmit)="submitHandler(formDirective)">
     <mat-form-field class="title">
       <input matInput placeholder="Event Title" formControlName="title">
@@ -12,5 +12,16 @@
         <div *ngIf="f.title.errors.required">Event Title is required.</div>
       </mat-error>
     </mat-form-field>
+    <mat-form-field>
+      <input class="datePicker" matInput [matDatepicker]="dobPickerStart" placeholder="Start Date" formControlName="startDate">
+      <mat-datepicker-toggle matSuffix [for]="dobPickerStart"></mat-datepicker-toggle>
+      <mat-datepicker #dobPicker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <input class="datePicker" matInput [matDatepicker]="dobPickerEnd" placeholder="End Date" formControlName="endDate">
+      <mat-datepicker-toggle matSuffix [for]="dobPickerEnd"></mat-datepicker-toggle>
+      <mat-datepicker #dobPickerEnd></mat-datepicker>
+    </mat-form-field>
   </form>
 </ion-content>
+{{eventForm.value | json}}

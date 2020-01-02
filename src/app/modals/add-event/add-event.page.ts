@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { FirebaseService } from '../../services/firebase.service';
 
 @Component({
   selector: 'app-add-event',
@@ -31,7 +32,7 @@ export class AddEventPage implements OnInit {
     {value: 'st_teresa_school_gym', viewValue: 'St. Teresa School Gym'},
   ];
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private firebaseService: FirebaseService) { }
 
   ngOnInit() {
     this.eventForm = this.fb.group({
@@ -46,6 +47,16 @@ export class AddEventPage implements OnInit {
     // convenience getter for easy access to form fields
   get f() {
     return this.eventForm.controls;
+  }
+
+  submitHandler(formDirective) {
+    const formValue = this.eventForm.value;
+    const event: any = {
+      title: formValue.title,
+      start: formValue.startDate,
+      end: formValue.endDate,
+    };
+    this.firebaseService.eventsCollection.add(event);
   }
 
 }
