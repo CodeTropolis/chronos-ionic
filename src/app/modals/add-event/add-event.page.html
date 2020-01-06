@@ -15,13 +15,34 @@
     <mat-form-field>
       <input class="datePicker" matInput [matDatepicker]="dobPickerStart" placeholder="Start Date" formControlName="startDate">
       <mat-datepicker-toggle matSuffix [for]="dobPickerStart"></mat-datepicker-toggle>
-      <mat-datepicker #dobPicker></mat-datepicker>
+      <mat-datepicker #dobPickerStart></mat-datepicker>
     </mat-form-field>
     <mat-form-field>
       <input class="datePicker" matInput [matDatepicker]="dobPickerEnd" placeholder="End Date" formControlName="endDate">
       <mat-datepicker-toggle matSuffix [for]="dobPickerEnd"></mat-datepicker-toggle>
       <mat-datepicker #dobPickerEnd></mat-datepicker>
     </mat-form-field>
+    <mat-form-field>
+      <mat-select placeholder="Type" formControlName="type">
+        <mat-option *ngFor="let type of types" [ngStyle]="{'background': type.bgColor}" [value]="[type.value, type.bgColor]">
+          {{type.display}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="f.type.invalid && (f.type.dirty || f.type.touched)">
+        <div *ngIf="f.type.errors.required">Event Type is required.</div>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select placeholder="Location" formControlName="location">
+        <mat-option *ngFor="let location of locations" [value]="location.value">
+          {{ location.display }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="f.location.invalid && (f.location.dirty || f.location.touched)">
+        <div *ngIf="f.location.errors.required">Location is required.</div>
+      </mat-error>
+    </mat-form-field>
+    <ion-button type="submit" [disabled]="!eventForm.valid">Submit</ion-button>
   </form>
 </ion-content>
 {{eventForm.value | json}}

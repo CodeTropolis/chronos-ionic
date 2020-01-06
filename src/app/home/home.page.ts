@@ -37,8 +37,8 @@ export class HomePage implements OnInit {
   }
 
   eventDrop(e) {
-    const start = this.momentDate(e.event.start);
-    const end = this.momentDate(e.event.end);
+    const start = this.formatDate(e.event.start);
+    const end = this.formatDate(e.event.end);
     const updatedEvent = {
       start,
       end
@@ -49,7 +49,7 @@ export class HomePage implements OnInit {
   eventDragStop(e) {}
 
   eventResize(e) {
-    const end = this.momentDate(e.event.end);
+    const end = this.formatDate(e.event.end);
     const updatedEvent = {
       end
     };
@@ -58,11 +58,11 @@ export class HomePage implements OnInit {
 
   eventResizeStop(e){}
 
-  momentDate(date: string) {
+  formatDate(date: string) {
     return moment(date).format('YYYY-MM-DD');
   }
 
-  momentDateTime(date: string) {
+  formatDateTime(date: string) {
     return moment(date).format('YYYY-MM-DD HH:mm');
   }
 
