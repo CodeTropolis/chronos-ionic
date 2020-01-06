@@ -56,7 +56,7 @@ export class HomePage implements OnInit {
     this.firebaseService.eventsCollection.doc(e.event.extendedProps.docId).update(updatedEvent);
   }
 
-  eventResizeStop(e){}
+  eventResizeStop(e) {}
 
   formatDate(date: string) {
     return moment(date).format('YYYY-MM-DD');
