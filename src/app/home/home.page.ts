@@ -5,6 +5,7 @@ import { FirebaseService } from '../services/firebase.service';
 import * as moment from 'moment';
 import { ModalController } from '@ionic/angular';
 import { AddEventPage } from '../modals/add-event/add-event.page';
+import { EventInfoPage } from '../modals/event-info/event-info.page';
 
 @Component({
   selector: 'app-home',
@@ -33,7 +34,8 @@ export class HomePage implements OnInit {
   }
 
   eventClick(arg) {
-    console.log(`MD: HomePage -> eventClick -> arg`, arg);
+    // console.log(`MD: HomePage -> eventClick -> arg`, arg);
+    this.presentEventInfoModal(arg);
   }
 
   eventDrop(e) {
@@ -71,6 +73,18 @@ export class HomePage implements OnInit {
     const modal = await this.modalController.create({
       component:  AddEventPage,
       cssClass: 'add-event-modal' // Must be defined in global.scss
+    });
+    return await modal.present();
+  }
+
+  async presentEventInfoModal(arg) {
+    console.log(`MD: HomePage -> presentEventInfoModal -> arg`, arg.event);
+    const modal = await this.modalController.create({
+      component:  EventInfoPage,
+      componentProps: {
+        event: arg.event,
+      },
+      cssClass: 'event-info-modal' // Must be defined in global.scss
     });
     return await modal.present();
   }

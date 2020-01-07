@@ -18,11 +18,12 @@ import { AddEventPage } from './/modals/add-event/add-event.page';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from './material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { EventInfoPage } from './modals/event-info/event-info.page';
 
 
 @NgModule({
-  declarations: [AppComponent, AddEventPage],
-  entryComponents: [AddEventPage],
+  declarations: [AppComponent, AddEventPage, EventInfoPage],
+  entryComponents: [AddEventPage, EventInfoPage],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
