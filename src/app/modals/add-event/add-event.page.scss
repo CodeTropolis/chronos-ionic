@@ -1,4 +1,6 @@
-mat-form-field {display: block;}
+mat-form-field {
+    margin-right: 10px;
+    &.title { display: block;}
+}
 
-
-// .datePicker {display: inline;}
+ion-button {display: block;}
