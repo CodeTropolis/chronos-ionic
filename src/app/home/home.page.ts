@@ -7,6 +7,8 @@ import { ModalController } from '@ionic/angular';
 import { AddEventPage } from '../modals/add-event/add-event.page';
 import { EventInfoPage } from '../modals/event-info/event-info.page';
 import { FullCalendarComponent } from '@fullcalendar/angular';
+import { Calendar, OptionsInput } from '@fullcalendar/core';
+import { Tooltip } from 'tooltips-js';
 
 @Component({
   selector: 'app-home',
@@ -16,9 +18,7 @@ import { FullCalendarComponent } from '@fullcalendar/angular';
 export class HomePage implements OnInit {
 
   @ViewChild(FullCalendarComponent, {static: true}) cal: FullCalendarComponent;
-  @ViewChild(Element, {static: true}) draggable: Element;
-  @ViewChild('external',  {static: true}) external: ElementRef;
-
+  // @ViewChild('external',  {static: true}) external: ElementRef;
 
   calendarPlugins = [
     dayGridPlugin,
@@ -31,19 +31,11 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     // console.log(`MD: HomePage -> cal`, this.cal);
+
     this.firebaseService.events.subscribe(events => {
       this.events = events;
     });
-    // tslint:disable-next-line: no-unused-expression
-    new Draggable(this.external.nativeElement, {
-      itemSelector: '.fc-event',
-      eventData: (eventEl) => {
-        // console.log(`MD: HomePage -> ngOnInit -> eventEl`, eventEl);
-        return {
-          title: eventEl.innerText
-        };
-      }
-  });
+
   }
 
   dateClick(arg) {
@@ -56,6 +48,8 @@ export class HomePage implements OnInit {
   }
 
   eventDrop(e) {
+    console.log(`MD: HomePage -> eventDrop -> e`, e);
+    // const title = e.event.title;
     const start = this.formatDate(e.event.start);
     const end = this.formatDate(e.event.end);
     const updatedEvent = {
@@ -63,6 +57,11 @@ export class HomePage implements OnInit {
       end
     };
     this.firebaseService.eventsCollection.doc(e.event.extendedProps.docId).update(updatedEvent);
+  }
+
+  eventRender(e){
+    console.log(`MD: HomePage -> eventRender -> e`, e);
+    e.el.innerHTML = `<div> ${e.event.title} edit icon </div>`;
   }
 
   eventDragStop(e) {}

@@ -7,21 +7,37 @@
   <ion-button (click) = 'presentAddEventModal()'>Add Event</ion-button> 
 </ion-header>
 
+<!-- <div #external>
+  <p>
+    <strong>Draggable Events</strong>
+  </p>
+  <div class='fc-event'>My Event 1</div>
+  <div class='fc-event'>My Event 2</div>
+  <div class='fc-event'>My Event 3</div>
+  <div class='fc-event'>My Event 4</div>
+  <div class='fc-event'>My Event 5</div>
+</div> -->
+
 <ion-content>
-  <div #external>
-    <p>
-      <strong>Draggable Events</strong>
-    </p>
-    <div class='fc-event'>My Event 1</div>
-    <div class='fc-event'>My Event 2</div>
-    <div class='fc-event'>My Event 3</div>
-    <div class='fc-event'>My Event 4</div>
-    <div class='fc-event'>My Event 5</div>
-  </div>
+
  <!-- contentHeight="auto" Fix issue with calendar not rendering upon initial load -->
-  <full-calendar #cal
+ <full-calendar #cal
+ defaultView="dayGridMonth"
+ [plugins]="calendarPlugins"
+ [editable] = 'true'
+ [events]= 'events'
+ [weekends]="true"
+ contentHeight="auto"
+ (dateClick)="dateClick($event)" 
+ (eventClick)="eventClick($event)" 
+ (eventResizeStop)='eventResizeStop($event)'
+ (eventResize)='eventResize($event)'
+ (eventDrop)='eventDrop($event)'
+ (eventRender)='eventRender($event)'
+></full-calendar>
+  <!-- <full-calendar #cal
   defaultView="dayGridMonth"
-  droppable = 'true'
+  
   [plugins]="calendarPlugins"
   [editable] = 'true'
   [events]= 'events'
@@ -32,6 +48,6 @@
   (eventResizeStop)='eventResizeStop($event)'
   (eventResize)='eventResize($event)'
   (eventDrop)='eventDrop($event)'
-></full-calendar>
+></full-calendar> -->
 
 </ion-content>
