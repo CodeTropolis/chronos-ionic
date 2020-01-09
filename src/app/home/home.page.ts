@@ -9,6 +9,7 @@ import { EventInfoPage } from '../modals/event-info/event-info.page';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { Calendar, OptionsInput } from '@fullcalendar/core';
 import { Tooltip } from 'tooltips-js';
+import { userInfo } from 'os';
 
 @Component({
   selector: 'app-home',
@@ -60,8 +61,14 @@ export class HomePage implements OnInit {
   }
 
   eventRender(e){
-    console.log(`MD: HomePage -> eventRender -> e`, e);
-    e.el.innerHTML = `<div> ${e.event.title} edit icon </div>`;
+  console.log(`MD: HomePage -> eventRender -> e`, e);
+  const eventEl = e.el.querySelector('.fc-content');
+  const linkIcon = document.createElement('i');
+  // if user = admin.
+  linkIcon.innerHTML = `<span style="margin: 0 10px; width: 30px; z-index:0;">edit icon</span>`;
+  eventEl.appendChild(linkIcon);
+  // Interferes with event resize
+  //e.el.innerHTML = `<span style="margin: 0 10px; width: 30px; z-index:0;">edit icon</span> ${e.event.title}`;
   }
 
   eventDragStop(e) {}
