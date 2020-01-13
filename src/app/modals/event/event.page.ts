@@ -11,6 +11,8 @@ import * as moment from 'moment';
 })
 export class EventPage implements OnInit {
 
+  // selected =  {value: 'private_party', display: 'Private Party', bgColor: '#3dc6ab'};
+
   @Input() event: any;
   eventForm: FormGroup;
 
@@ -51,14 +53,15 @@ export class EventPage implements OnInit {
   }
 
   private populateForm(e) {
-    console.log(`MD: AddEventPage -> populateForm -> e`, e);
+    console.log(`MD: EventPage -> populateForm -> e`, e);
     this.eventForm.patchValue({
       title: e.title,
       startDate: e.start,
       endDate: e.end,
-      type: e.extendedProps.type[1],
+      type: {value: e.extendedProps.type, bgColor: e.backgroundColor},
       location: e.extendedProps.location,
     });
+    console.log(`MD: EventPage -> populateForm -> this.eventForm`, this.eventForm);
   }
 
   get f() {
@@ -71,8 +74,8 @@ export class EventPage implements OnInit {
       title: formValue.title,
       start: this.formatDate(formValue.startDate),
       end:  this.formatDate(formValue.endDate),
-      type: formValue.type,
-      backgroundColor: formValue.type[1],
+      type: formValue.type.value,
+      backgroundColor: formValue.type.bgColor,
       location: formValue.location
     };
 
@@ -80,6 +83,10 @@ export class EventPage implements OnInit {
       .then(x => {
         this.resetForm();
       });
+  }
+
+  compareObjects(o1: any, o2: any): boolean {
+    return o1 && o2 ? o1.value === o2.value : o1 === o2;
   }
 
   formatDate(date: string) {
