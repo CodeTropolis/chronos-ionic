@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { FirebaseService } from '../../services/firebase.service';
 import { ModalController } from '@ionic/angular';
 import * as moment from 'moment';
 
 @Component({
-  selector: 'app-add-event',
-  templateUrl: './add-event.page.html',
-  styleUrls: ['./add-event.page.scss'],
+  selector: 'add-event',
+  templateUrl: './event.page.html',
+  styleUrls: ['./event.page.scss'],
 })
-export class AddEventPage implements OnInit {
+export class EventPage implements OnInit {
 
+  @Input() event: any;
   eventForm: FormGroup;
 
   types = [
@@ -44,6 +45,20 @@ export class AddEventPage implements OnInit {
       type: ['', Validators.required],
       location: ['', Validators.required],
     });
+
+    // If user is admin
+    this.populateForm(this.event);
+  }
+
+  private populateForm(e) {
+    console.log(`MD: AddEventPage -> populateForm -> e`, e);
+    this.eventForm.patchValue({
+      title: e.title,
+      startDate: e.start,
+      endDate: e.end,
+      type: e.extendedProps.type[1],
+      location: e.extendedProps.location,
+    });
   }
 
   get f() {
@@ -60,6 +75,7 @@ export class AddEventPage implements OnInit {
       backgroundColor: formValue.type[1],
       location: formValue.location
     };
+
     this.firebaseService.eventsCollection.add(event)
       .then(x => {
         this.resetForm();

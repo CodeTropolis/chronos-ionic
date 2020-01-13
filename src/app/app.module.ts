@@ -14,7 +14,7 @@ import { environment } from '../environments/environment';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AddEventPage } from './/modals/add-event/add-event.page';
+import { EventPage } from './modals/event/event.page';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from './material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -22,8 +22,8 @@ import { EventInfoPage } from './modals/event-info/event-info.page';
 
 
 @NgModule({
-  declarations: [AppComponent, AddEventPage, EventInfoPage],
-  entryComponents: [AddEventPage, EventInfoPage],
+  declarations: [AppComponent, EventPage, EventInfoPage],
+  entryComponents: [EventPage, EventInfoPage],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,

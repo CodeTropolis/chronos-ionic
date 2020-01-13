@@ -1,10 +1,13 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Add Event</ion-title>
+    <ion-title>Event</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
+
+  <!-- if user.roles.admin then form else read-only -->
+
   <form [formGroup]="eventForm" #formDirective="ngForm" (ngSubmit)="submitHandler(formDirective)">
     <mat-form-field class="title">
       <input matInput placeholder="Event Title" formControlName="title">
@@ -24,7 +27,7 @@
     </mat-form-field>
     <mat-form-field>
       <mat-select placeholder="Type" formControlName="type">
-        <mat-option *ngFor="let type of types" [ngStyle]="{'background': type.bgColor}" [value]="[type.value, type.bgColor]">
+        <mat-option *ngFor="let type of types" [ngStyle]="{'background': type.bgColor}" [value]="[type.value,type.display,type.bgColor]">
           {{type.display}}
         </mat-option>
       </mat-select>

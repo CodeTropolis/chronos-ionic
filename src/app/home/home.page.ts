@@ -4,12 +4,11 @@ import interactionPlugin,  { Draggable } from '@fullcalendar/interaction';
 import { FirebaseService } from '../services/firebase.service';
 import * as moment from 'moment';
 import { ModalController } from '@ionic/angular';
-import { AddEventPage } from '../modals/add-event/add-event.page';
+import { EventPage } from '../modals/event/event.page';
 import { EventInfoPage } from '../modals/event-info/event-info.page';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { Calendar, OptionsInput } from '@fullcalendar/core';
 import { Tooltip } from 'tooltips-js';
-import { userInfo } from 'os';
 
 @Component({
   selector: 'app-home',
@@ -45,11 +44,12 @@ export class HomePage implements OnInit {
 
   eventClick(arg) {
     // console.log(`MD: HomePage -> eventClick -> arg`, arg);
-    this.presentEventInfoModal(arg);
+   //  this.user.roles.admin ?   this.presentEventModal(arg) : this.presentEventInfoModal(arg);
+   this.presentEventModal(arg);
   }
 
   eventDrop(e) {
-    console.log(`MD: HomePage -> eventDrop -> e`, e);
+    // console.log(`MD: HomePage -> eventDrop -> e`, e);
     // const title = e.event.title;
     const start = this.formatDate(e.event.start);
     const end = this.formatDate(e.event.end);
@@ -61,15 +61,19 @@ export class HomePage implements OnInit {
   }
 
   eventRender(e){
-  console.log(`MD: HomePage -> eventRender -> e`, e);
-  const eventEl = e.el.querySelector('.fc-content');
-  const linkIcon = document.createElement('i');
-  // if user = admin.
-  linkIcon.innerHTML = `<span style="margin: 0 10px; width: 30px; z-index:0;">edit icon</span>`;
-  eventEl.appendChild(linkIcon);
-  // Interferes with event resize
-  //e.el.innerHTML = `<span style="margin: 0 10px; width: 30px; z-index:0;">edit icon</span> ${e.event.title}`;
+    // console.log(`MD: HomePage -> eventRender -> e`, e);
+    const eventEl = e.el.querySelector('.fc-content');
+    const linkIcon = document.createElement('i');
+    // if user = admin.
+    linkIcon.innerHTML = `<span style="margin: 0 10px; width: 30px; z-index:999;">edit icon</span>`;
+    eventEl.appendChild(linkIcon);
+    // Altering e.el.innerHTML will interfere with event resize
   }
+
+  // editEvent(e) {
+  //   console.log(e);
+  // }
+
 
   eventDragStop(e) {}
 
@@ -91,25 +95,28 @@ export class HomePage implements OnInit {
     return moment(date).format('YYYY-MM-DD HH:mm');
   }
 
-
-  async presentAddEventModal() {
+  // Read-only or edit this event depending on user's role.
+  async presentEventModal(arg) {
     const modal = await this.modalController.create({
-      component:  AddEventPage,
+      component:  EventPage,
+      componentProps: {
+        event: arg.event,
+      },
       cssClass: 'add-event-modal' // Must be defined in global.scss
     });
     return await modal.present();
   }
 
-  async presentEventInfoModal(arg) {
-    console.log(`MD: HomePage -> presentEventInfoModal -> arg`, arg.event);
-    const modal = await this.modalController.create({
-      component:  EventInfoPage,
-      componentProps: {
-        event: arg.event,
-      },
-      cssClass: 'event-info-modal' // Must be defined in global.scss
-    });
-    return await modal.present();
-  }
+  // async presentEventInfoModal(arg) {
+  //   console.log(`MD: HomePage -> presentEventInfoModal -> arg`, arg.event);
+  //   const modal = await this.modalController.create({
+  //     component:  EventInfoPage,
+  //     componentProps: {
+  //       event: arg.event,
+  //     },
+  //     cssClass: 'event-info-modal' // Must be defined in global.scss
+  //   });
+  //   return await modal.present();
+  // }
 
 }
