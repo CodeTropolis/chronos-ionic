@@ -85,6 +85,8 @@ export class EventPage implements OnInit {
       });
   }
 
+  // https://stackoverflow.com/a/51121933
+  // https://levelup.gitconnected.com/using-comparewith-in-angular-material-2-multiple-select-options-a6f44e565f90
   compareObjects(o1: any, o2: any): boolean {
     return o1 && o2 ? o1.value === o2.value : o1 === o2;
   }
