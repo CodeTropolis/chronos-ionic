@@ -9,6 +9,8 @@ import { EventInfoPage } from '../modals/event-info/event-info.page';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { Calendar, OptionsInput } from '@fullcalendar/core';
 import { Tooltip } from 'tooltips-js';
+import { EventService } from '../services/event.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -26,11 +28,13 @@ export class HomePage implements OnInit {
   ];
 
   events: any[] = [];
+  // currentEvent: unknown;
 
-  constructor(private firebaseService: FirebaseService,  private modalController: ModalController) {}
+  constructor(private firebaseService: FirebaseService,  private modalController: ModalController, private eventService: EventService) {}
 
   ngOnInit() {
     // console.log(`MD: HomePage -> cal`, this.cal);
+    // this.eventService.currentEvent$.pipe(take(1)).subscribe(event => this.currentEvent = event);
 
     this.firebaseService.events.subscribe(events => {
       this.events = events;
@@ -43,9 +47,9 @@ export class HomePage implements OnInit {
   }
 
   eventClick(arg) {
-    // console.log(`MD: HomePage -> eventClick -> arg`, arg);
+    console.log(`MD: HomePage -> eventClick -> arg`, arg);
    //  this.user.roles.admin ?   this.presentEventModal(arg) : this.presentEventInfoModal(arg);
-   this.presentEventModal(arg);
+    this.presentEventModal(arg);
   }
 
   eventDrop(e) {

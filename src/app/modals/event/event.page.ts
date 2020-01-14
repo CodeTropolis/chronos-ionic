@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { FirebaseService } from '../../services/firebase.service';
 import { ModalController } from '@ionic/angular';
 import * as moment from 'moment';
+import { EventService } from 'src/app/services/event.service';
 
 @Component({
   selector: 'add-event',
@@ -10,8 +11,6 @@ import * as moment from 'moment';
   styleUrls: ['./event.page.scss'],
 })
 export class EventPage implements OnInit {
-
-  // selected =  {value: 'private_party', display: 'Private Party', bgColor: '#3dc6ab'};
 
   @Input() event: any;
   eventForm: FormGroup;
@@ -36,8 +35,14 @@ export class EventPage implements OnInit {
     {value: 'st_teresa_school', display: 'St. Teresa School'},
     {value: 'st_teresa_school_gym', display: 'St. Teresa School Gym'},
   ];
+  currentEventDocId: string;
 
-  constructor(private fb: FormBuilder, private firebaseService: FirebaseService, private modalController: ModalController) { }
+  constructor(
+    private fb: FormBuilder,
+    private firebaseService: FirebaseService,
+    private modalController: ModalController,
+    private eventService: EventService,
+    ) { }
 
   ngOnInit() {
     this.eventForm = this.fb.group({
@@ -53,7 +58,8 @@ export class EventPage implements OnInit {
   }
 
   private populateForm(e) {
-    console.log(`MD: EventPage -> populateForm -> e`, e);
+    this.currentEventDocId = e.extendedProps.docId;
+    // console.log(`MD: EventPage -> populateForm -> e`, e);
     this.eventForm.patchValue({
       title: e.title,
       startDate: e.start,
@@ -61,7 +67,7 @@ export class EventPage implements OnInit {
       type: {value: e.extendedProps.type, bgColor: e.backgroundColor},
       location: e.extendedProps.location,
     });
-    console.log(`MD: EventPage -> populateForm -> this.eventForm`, this.eventForm);
+    // console.log(`MD: EventPage -> populateForm -> this.eventForm`, this.eventForm);
   }
 
   get f() {
@@ -79,10 +85,15 @@ export class EventPage implements OnInit {
       location: formValue.location
     };
 
-    this.firebaseService.eventsCollection.add(event)
+    this.firebaseService.eventsCollection.doc(this.currentEventDocId).update(event)
       .then(x => {
         this.resetForm();
       });
+
+    // this.firebaseService.eventsCollection.add(event)
+    //   .then(x => {
+    //     this.resetForm();
+    //   });
   }
 
   // https://stackoverflow.com/a/51121933
