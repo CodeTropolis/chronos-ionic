@@ -49,8 +49,11 @@ export class EventPage implements OnInit {
       title: ['', Validators.required],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
+      startTime: ['', Validators.required],
+      endTime: ['', Validators.required],
       type: ['', Validators.required],
       location: ['', Validators.required],
+      allDay: [''],
     });
 
     // If user is admin
@@ -66,6 +69,7 @@ export class EventPage implements OnInit {
       endDate: e.end,
       type: {value: e.extendedProps.type, bgColor: e.backgroundColor},
       location: e.extendedProps.location,
+      // allDay: e.allDay,
     });
     // console.log(`MD: EventPage -> populateForm -> this.eventForm`, this.eventForm);
   }
@@ -78,11 +82,12 @@ export class EventPage implements OnInit {
     const formValue = this.eventForm.value;
     const event: any = {
       title: formValue.title,
-      start: this.formatDate(formValue.startDate),
-      end:  this.formatDate(formValue.endDate),
+      start: this.formatDate(formValue.startDate, formValue.startTime),
+      end:  this.formatDate(formValue.endDate, formValue.endTime),
       type: formValue.type.value,
       backgroundColor: formValue.type.bgColor,
-      location: formValue.location
+      location: formValue.location,
+      allDay: false,
     };
 
     this.firebaseService.eventsCollection.doc(this.currentEventDocId).update(event)
@@ -102,8 +107,15 @@ export class EventPage implements OnInit {
     return o1 && o2 ? o1.value === o2.value : o1 === o2;
   }
 
-  formatDate(date: string) {
-    return moment(date).format('YYYY-MM-DD');
+  formatDate(date: string, time) {
+
+    const fDate = moment(date).format('YYYY-MM-DD');
+    // const t = time;
+    // console.log(`MD: EventPage -> formatDate -> t`, t);
+    const dateTime = moment(fDate + ' ' + time, 'YYYY/MM/DD HH:mm');
+    const dtf = dateTime.format('YYYY-MM-DDTHH:mm');
+    console.log(`MD: EventPage -> formatDate -> dtf`, dtf);
+    return dtf;
   }
 
 

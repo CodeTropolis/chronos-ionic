@@ -25,6 +25,17 @@
       <mat-datepicker-toggle matSuffix [for]="dobPickerEnd"></mat-datepicker-toggle>
       <mat-datepicker #dobPickerEnd></mat-datepicker>
     </mat-form-field>
+
+    
+    <input [ngxTimepicker]="startTime" placeholder="Start Time" formControlName="startTime">
+    <ngx-material-timepicker-toggle [for]="startTime"></ngx-material-timepicker-toggle>
+    <ngx-material-timepicker #startTime [enableKeyboardInput]="true"></ngx-material-timepicker>
+
+    <input [ngxTimepicker]="endTime" placeholder="End Time" formControlName="endTime">
+    <ngx-material-timepicker-toggle [for]="endTime"></ngx-material-timepicker-toggle>
+    <ngx-material-timepicker #endTime [enableKeyboardInput]="true"></ngx-material-timepicker>
+
+
     <mat-form-field>
       <mat-select placeholder="Type" formControlName="type" [compareWith]="compareObjects">
         <!-- <mat-option *ngFor="let type of types" [ngStyle]="{'background': type.bgColor}" [value]="{value: type.value, backgroundColor: type.bgColor}"> -->
@@ -46,6 +57,9 @@
         <div *ngIf="f.location.errors.required">Location is required.</div>
       </mat-error>
     </mat-form-field>
+  
+      <!-- <mat-checkbox formControlName="allDay">This is an all day event.</mat-checkbox> -->
+
     <ion-button type="submit" [disabled]="!eventForm.valid">Submit</ion-button>
   </form>
 </ion-content>
