@@ -61,12 +61,18 @@ export class EventPage implements OnInit {
   }
 
   private populateForm(e) {
+    // Switch from 24 hr format to format that the time picker will accept.
+    const sTime = e.start.toLocaleTimeString('en-US');
+    const startTime = moment(sTime, ['h:mm A']).format('hh:mm A');
+    const eTime = e.end.toLocaleTimeString('en-US');
+    const endTime = moment(eTime, ['h:mm A']).format('hh:mm A');
     this.currentEventDocId = e.extendedProps.docId;
-    // console.log(`MD: EventPage -> populateForm -> e`, e);
     this.eventForm.patchValue({
       title: e.title,
       startDate: e.start,
       endDate: e.end,
+      startTime,
+      endTime,
       type: {value: e.extendedProps.type, bgColor: e.backgroundColor},
       location: e.extendedProps.location,
       // allDay: e.allDay,
@@ -82,8 +88,8 @@ export class EventPage implements OnInit {
     const formValue = this.eventForm.value;
     const event: any = {
       title: formValue.title,
-      start: this.formatDate(formValue.startDate, formValue.startTime),
-      end:  this.formatDate(formValue.endDate, formValue.endTime),
+      start: this.formatDateTime(formValue.startDate, formValue.startTime),
+      end:  this.formatDateTime(formValue.endDate, formValue.endTime),
       type: formValue.type.value,
       backgroundColor: formValue.type.bgColor,
       location: formValue.location,
@@ -107,14 +113,12 @@ export class EventPage implements OnInit {
     return o1 && o2 ? o1.value === o2.value : o1 === o2;
   }
 
-  formatDate(date: string, time) {
-
+  formatDateTime(date: string, time) {
+    const mTime = moment(time, ['h:mm A']).format('HH:mm');
     const fDate = moment(date).format('YYYY-MM-DD');
-    // const t = time;
-    // console.log(`MD: EventPage -> formatDate -> t`, t);
-    const dateTime = moment(fDate + ' ' + time, 'YYYY/MM/DD HH:mm');
+    const dateTime = moment(fDate + ' ' + mTime, 'YYYY/MM/DD HH:mm');
     const dtf = dateTime.format('YYYY-MM-DDTHH:mm');
-    console.log(`MD: EventPage -> formatDate -> dtf`, dtf);
+    console.log(`MD: EventPage -> formatDateTime -> dtf`, dtf);
     return dtf;
   }
 
