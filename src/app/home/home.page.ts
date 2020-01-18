@@ -42,14 +42,12 @@ export class HomePage implements OnInit {
 
   }
 
-  dateClick(arg) {
-    console.log(`MD: HomePage -> dateClick -> arg`, arg);
-  }
+  // dateClick(arg) {
+  //   console.log(`MD: HomePage -> dateClick -> arg`, arg);
+  // }
 
   eventClick(arg) {
-    console.log(`MD: HomePage -> eventClick -> arg`, arg);
-   //  this.user.roles.admin ?   this.presentEventModal(arg) : this.presentEventInfoModal(arg);
-    this.presentEventModal(arg);
+    this.presentEventModal(arg, false);
   }
 
   eventDrop(e) {
@@ -65,7 +63,6 @@ export class HomePage implements OnInit {
   }
 
   eventRender(e){
-    // console.log(`MD: HomePage -> eventRender -> e`, e);
     const eventEl = e.el.querySelector('.fc-content');
     const linkIcon = document.createElement('i');
     // if user = admin.
@@ -73,10 +70,6 @@ export class HomePage implements OnInit {
     eventEl.appendChild(linkIcon);
     // Altering e.el.innerHTML will interfere with event resize
   }
-
-  // editEvent(e) {
-  //   console.log(e);
-  // }
 
 
   eventDragStop(e) {}
@@ -100,27 +93,20 @@ export class HomePage implements OnInit {
   }
 
   // Read-only or edit this event depending on user's role.
-  async presentEventModal(arg) {
+  async presentEventModal(arg, isSelectingDays) {
     const modal = await this.modalController.create({
       component:  EventPage,
       componentProps: {
-        event: arg.event,
+        event: arg,
+        isSelectingDays,
       },
       cssClass: 'add-event-modal' // Must be defined in global.scss
     });
     return await modal.present();
   }
 
-  // async presentEventInfoModal(arg) {
-  //   console.log(`MD: HomePage -> presentEventInfoModal -> arg`, arg.event);
-  //   const modal = await this.modalController.create({
-  //     component:  EventInfoPage,
-  //     componentProps: {
-  //       event: arg.event,
-  //     },
-  //     cssClass: 'event-info-modal' // Must be defined in global.scss
-  //   });
-  //   return await modal.present();
-  // }
+  select(info) {
+    this.presentEventModal(info, true);
+  }
 
 }

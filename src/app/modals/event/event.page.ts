@@ -4,6 +4,7 @@ import { FirebaseService } from '../../services/firebase.service';
 import { ModalController } from '@ionic/angular';
 import * as moment from 'moment';
 import { EventService } from 'src/app/services/event.service';
+import { FullCalendarComponent } from '@fullcalendar/angular';
 
 @Component({
   selector: 'add-event',
@@ -13,6 +14,7 @@ import { EventService } from 'src/app/services/event.service';
 export class EventPage implements OnInit {
 
   @Input() event: any;
+  @Input() isSelectingDays: boolean;
   eventForm: FormGroup;
 
   types = [
@@ -55,29 +57,40 @@ export class EventPage implements OnInit {
       location: ['', Validators.required],
       allDay: [''],
     });
-
-    // If user is admin
     this.populateForm(this.event);
   }
 
   private populateForm(e) {
-    // Switch from 24 hr format to format that the time picker will accept.
-    const sTime = e.start.toLocaleTimeString('en-US');
-    const startTime = moment(sTime, ['h:mm A']).format('hh:mm A');
-    const eTime = e.end.toLocaleTimeString('en-US');
-    const endTime = moment(eTime, ['h:mm A']).format('hh:mm A');
-    this.currentEventDocId = e.extendedProps.docId;
-    this.eventForm.patchValue({
-      title: e.title,
-      startDate: e.start,
-      endDate: e.end,
-      startTime,
-      endTime,
-      type: {value: e.extendedProps.type, bgColor: e.backgroundColor},
-      location: e.extendedProps.location,
-      // allDay: e.allDay,
-    });
-    // console.log(`MD: EventPage -> populateForm -> this.eventForm`, this.eventForm);
+    if (!this.isSelectingDays) {
+      const event = e.event;
+      let full;
+      let sTime;
+      let startTime;
+      let eTime;
+      let endTime;
+      // Switch from 24 hr format to format that the time picker will accept.
+      sTime = event.start.toLocaleTimeString('en-US');
+      startTime = moment(sTime, ['h:mm A']).format('hh:mm A');
+      eTime = event.end.toLocaleTimeString('en-US');
+      endTime = moment(eTime, ['h:mm A']).format('hh:mm A');
+      this.currentEventDocId = event.extendedProps.docId;
+      full = {
+        title: event.title,
+        startDate: event.start,
+        endDate: event.end,
+        startTime,
+        endTime,
+        type: {value: event.extendedProps.type, bgColor: event.backgroundColor},
+        location: event.extendedProps.location,
+      };
+      this.eventForm.patchValue(full);
+    } else {
+      const onlyDates = {
+        startDate: e.start,
+        endDate: e.end,
+      };
+      this.eventForm.patchValue(onlyDates);
+    }
   }
 
   get f() {
@@ -96,15 +109,18 @@ export class EventPage implements OnInit {
       allDay: false,
     };
 
-    this.firebaseService.eventsCollection.doc(this.currentEventDocId).update(event)
+    if (!this.isSelectingDays) {
+      this.firebaseService.eventsCollection.doc(this.currentEventDocId).update(event)
       .then(x => {
         this.resetForm();
       });
-
-    // this.firebaseService.eventsCollection.add(event)
-    //   .then(x => {
-    //     this.resetForm();
-    //   });
+      // ToDo: If user is admin, allow event to be written to db, else it will simply be a request email.
+    } else {
+       this.firebaseService.eventsCollection.add(event)
+        .then(x => {
+          this.resetForm();
+        });
+    }
   }
 
   // https://stackoverflow.com/a/51121933
@@ -118,7 +134,6 @@ export class EventPage implements OnInit {
     const fDate = moment(date).format('YYYY-MM-DD');
     const dateTime = moment(fDate + ' ' + mTime, 'YYYY/MM/DD HH:mm');
     const dtf = dateTime.format('YYYY-MM-DDTHH:mm');
-    console.log(`MD: EventPage -> formatDateTime -> dtf`, dtf);
     return dtf;
   }
 

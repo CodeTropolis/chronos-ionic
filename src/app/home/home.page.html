@@ -25,16 +25,35 @@
   contentHeight="auto"
   defaultView="dayGridMonth"
   nextDayThreshold = '00:00:00'
+  [selectable] = 'true'
   [plugins]="calendarPlugins"
   [editable] = 'true'
   [events]= 'events'
   [weekends]="true"
   contentHeight="auto"
-  (dateClick)="dateClick($event)" 
+  (select) = 'select($event)'
   (eventClick)="eventClick($event)" 
   (eventResizeStop)='eventResizeStop($event)'
   (eventResize)='eventResize($event)'
   (eventDrop)='eventDrop($event)'
   (eventRender)='eventRender($event)'
   ></full-calendar>
+  <!-- <full-calendar #cal
+  contentHeight="auto"
+  defaultView="dayGridMonth"
+  nextDayThreshold = '00:00:00'
+  [selectable] = 'true'
+  [plugins]="calendarPlugins"
+  [editable] = 'true'
+  [events]= 'events'
+  [weekends]="true"
+  contentHeight="auto"
+  (select) = 'select($event)'
+  (dateClick)="dateClick($event)" 
+  (eventClick)="eventClick($event)" 
+  (eventResizeStop)='eventResizeStop($event)'
+  (eventResize)='eventResize($event)'
+  (eventDrop)='eventDrop($event)'
+  (eventRender)='eventRender($event)'
+  ></full-calendar> -->
 </ion-content>
