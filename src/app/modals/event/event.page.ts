@@ -73,6 +73,7 @@ export class EventPage implements OnInit {
       startTime = moment(sTime, ['h:mm A']).format('hh:mm A');
       eTime = event.end.toLocaleTimeString('en-US');
       endTime = moment(eTime, ['h:mm A']).format('hh:mm A');
+      console.log(`MD: EventPage -> populateForm -> event.end`, event.end);
       this.currentEventDocId = event.extendedProps.docId;
       full = {
         title: event.title,
@@ -85,9 +86,11 @@ export class EventPage implements OnInit {
       };
       this.eventForm.patchValue(full);
     } else {
+      const minusOneDay = moment(e.end).subtract(1, 'days').format('YYYY-MM-DD');
       const onlyDates = {
         startDate: e.start,
-        endDate: e.end,
+        endDate: minusOneDay + 'T06:00:00.000Z',
+        // Must format endDate as: '2020-01-22T06:00:00.000Z',
       };
       this.eventForm.patchValue(onlyDates);
     }

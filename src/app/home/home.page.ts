@@ -1,5 +1,6 @@
 import { Component, ViewChild, OnInit, ElementRef } from '@angular/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin,  { Draggable } from '@fullcalendar/interaction';
 import { FirebaseService } from '../services/firebase.service';
 import * as moment from 'moment';
@@ -20,28 +21,21 @@ import { take } from 'rxjs/operators';
 export class HomePage implements OnInit {
 
   @ViewChild(FullCalendarComponent, {static: true}) cal: FullCalendarComponent;
-  // @ViewChild('external',  {static: true}) external: ElementRef;
-
   calendarPlugins = [
     dayGridPlugin,
     interactionPlugin,
+    timeGridPlugin,
   ];
-
   events: any[] = [];
-  // currentEvent: unknown;
 
   constructor(private firebaseService: FirebaseService,  private modalController: ModalController, private eventService: EventService) {}
 
   ngOnInit() {
-    // console.log(`MD: HomePage -> cal`, this.cal);
-    // this.eventService.currentEvent$.pipe(take(1)).subscribe(event => this.currentEvent = event);
-
     this.firebaseService.events.subscribe(events => {
       this.events = events;
     });
 
   }
-
   // dateClick(arg) {
   //   console.log(`MD: HomePage -> dateClick -> arg`, arg);
   // }
@@ -51,8 +45,6 @@ export class HomePage implements OnInit {
   }
 
   eventDrop(e) {
-    // console.log(`MD: HomePage -> eventDrop -> e`, e);
-    // const title = e.event.title;
     const start = this.formatDate(e.event.start);
     const end = this.formatDate(e.event.end);
     const updatedEvent = {
@@ -70,7 +62,6 @@ export class HomePage implements OnInit {
     eventEl.appendChild(linkIcon);
     // Altering e.el.innerHTML will interfere with event resize
   }
-
 
   eventDragStop(e) {}
 
