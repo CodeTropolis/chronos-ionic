@@ -13,7 +13,7 @@ import { FullCalendarComponent } from '@fullcalendar/angular';
 })
 export class EventPage implements OnInit {
 
-  @Input() event: any;
+  @Input() arg: any;
   @Input() isSelectingDays: boolean;
   eventForm: FormGroup;
 
@@ -57,25 +57,20 @@ export class EventPage implements OnInit {
       location: ['', Validators.required],
       allDay: [''],
     });
-    this.populateForm(this.event);
+    this.populateForm(this.arg);
   }
 
-  private populateForm(e) {
+  private populateForm(arg) {
+    this.dateIsAvailable(this.arg);
     if (!this.isSelectingDays) {
-      const event = e.event;
-      let full;
-      let sTime;
-      let startTime;
-      let eTime;
-      let endTime;
+      const event = arg.event;
       // Switch from 24 hr format to format that the time picker will accept.
-      sTime = event.start.toLocaleTimeString('en-US');
-      startTime = moment(sTime, ['h:mm A']).format('hh:mm A');
-      eTime = event.end.toLocaleTimeString('en-US');
-      endTime = moment(eTime, ['h:mm A']).format('hh:mm A');
-      console.log(`MD: EventPage -> populateForm -> event.end`, event.end);
+      const sTime = event.start.toLocaleTimeString('en-US');
+      const startTime = moment(sTime, ['h:mm A']).format('hh:mm A');
+      const eTime = event.end.toLocaleTimeString('en-US');
+      const endTime = moment(eTime, ['h:mm A']).format('hh:mm A');
       this.currentEventDocId = event.extendedProps.docId;
-      full = {
+      const full = {
         title: event.title,
         startDate: event.start,
         endDate: event.end,
@@ -86,11 +81,11 @@ export class EventPage implements OnInit {
       };
       this.eventForm.patchValue(full);
     } else {
-      const minusOneDay = moment(e.end).subtract(1, 'days').format('YYYY-MM-DD');
+      const minusOneDay = moment(arg.end).subtract(1, 'days').format('YYYY-MM-DDT06:00:00.000Z');
       const onlyDates = {
-        startDate: e.start,
-        endDate: minusOneDay + 'T06:00:00.000Z',
-        // Must format endDate as: '2020-01-22T06:00:00.000Z',
+        startDate: arg.start,
+        endDate: minusOneDay,
+        // Must format endDate as: 'YYYY-MM-DDT00:00:00.000Z' (use arbitrary hour) in order for end date field to populate.
       };
       this.eventForm.patchValue(onlyDates);
     }
@@ -110,8 +105,9 @@ export class EventPage implements OnInit {
       backgroundColor: formValue.type.bgColor,
       location: formValue.location,
       allDay: false,
+      startStr: moment(formValue.startDate).format('YYYY-MM-DD') // For Queries
     };
-
+    // If an event is clicked, the event handler from home.page will pass in isSelectingDays as false
     if (!this.isSelectingDays) {
       this.firebaseService.eventsCollection.doc(this.currentEventDocId).update(event)
       .then(x => {
@@ -119,11 +115,30 @@ export class EventPage implements OnInit {
       });
       // ToDo: If user is admin, allow event to be written to db, else it will simply be a request email.
     } else {
-       this.firebaseService.eventsCollection.add(event)
+      this.firebaseService.eventsCollection.add(event)
         .then(x => {
           this.resetForm();
         });
     }
+  }
+
+  dateIsAvailable(arg): boolean {
+    // console.log(`MD: EventPage -> arg`, arg);
+    // Query events based on starting date of selected date range
+    // If an event is scheduled on the same date on the same location,
+    // the starting must be 30 min after the end of the last event.
+
+    // const eventsRef = this.firebaseService.eventsCollection.ref;
+    // const query = eventsRef.where('startStr', '==', arg.startStr)
+    //   .get()
+    //   .then(querySnapshot => {
+    //     querySnapshot.forEach(doc => {
+    //       console.log(doc.data());
+    //     });
+    //   }).catch(error => {
+    //     console.log('Error getting documents: ', error);
+    // });
+    return true;
   }
 
   // https://stackoverflow.com/a/51121933

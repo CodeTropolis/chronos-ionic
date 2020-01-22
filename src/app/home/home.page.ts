@@ -45,21 +45,24 @@ export class HomePage implements OnInit {
   }
 
   eventDrop(e) {
+    // Must format, otherwise e.event.start will save as
+    // Month DD YYYY at 2:00:00 PM UTC-6 which calendar will not recognize
     const start = this.formatDate(e.event.start);
     const end = this.formatDate(e.event.end);
     const updatedEvent = {
       start,
-      end
+      end,
+      startStr: moment(e.event.start).format('YYYY-MM-DD') // For Queries
     };
     this.firebaseService.eventsCollection.doc(e.event.extendedProps.docId).update(updatedEvent);
   }
 
   eventRender(e){
-    const eventEl = e.el.querySelector('.fc-content');
-    const linkIcon = document.createElement('i');
-    // if user = admin.
-    linkIcon.innerHTML = `<span style="margin: 0 10px; width: 30px; z-index:999;">edit icon</span>`;
-    eventEl.appendChild(linkIcon);
+    // const eventEl = e.el.querySelector('.fc-content');
+    // const linkIcon = document.createElement('i');
+    // // if user = admin.
+    // linkIcon.innerHTML = `<span style="margin: 0 10px; width: 30px; z-index:999;">edit icon</span>`;
+    // eventEl.appendChild(linkIcon);
     // Altering e.el.innerHTML will interfere with event resize
   }
 
@@ -75,29 +78,37 @@ export class HomePage implements OnInit {
 
   eventResizeStop(e) {}
 
+  select(info) {
+    this.presentEventModal(info, true);
+  }
+
   formatDate(date: string) {
     return moment(date).format('YYYY-MM-DD');
   }
 
-  formatDateTime(date: string) {
-    return moment(date).format('YYYY-MM-DD HH:mm');
+  formatDateTime(date: string, time) {
+    const mTime = moment(time, ['h:mm A']).format('HH:mm');
+    const fDate = moment(date).format('YYYY-MM-DD');
+    const dateTime = moment(fDate + ' ' + mTime, 'YYYY/MM/DD HH:mm');
+    const dtf = dateTime.format('YYYY-MM-DDTHH:mm');
+    return dtf;
   }
 
+  // formatDateTime(date: string) {
+  //   return moment(date).format('YYYY-MM-DD HH:mm');
+  // }
+
   // Read-only or edit this event depending on user's role.
-  async presentEventModal(arg, isSelectingDays) {
+  async presentEventModal(arg, isSelectingDays: boolean) {
     const modal = await this.modalController.create({
       component:  EventPage,
       componentProps: {
-        event: arg,
+        arg,
         isSelectingDays,
       },
       cssClass: 'add-event-modal' // Must be defined in global.scss
     });
     return await modal.present();
-  }
-
-  select(info) {
-    this.presentEventModal(info, true);
   }
 
 }
