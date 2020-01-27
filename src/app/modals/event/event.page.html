@@ -26,14 +26,16 @@
       <mat-datepicker #dobPickerEnd></mat-datepicker>
     </mat-form-field>
 
-    
-    <input [ngxTimepicker]="startTime" placeholder="Start Time" formControlName="startTime">
-    <ngx-material-timepicker-toggle [for]="startTime"></ngx-material-timepicker-toggle>
-    <ngx-material-timepicker #startTime [enableKeyboardInput]="true"></ngx-material-timepicker>
+    <div class="timePicker">
+      <input [ngxTimepicker]="startTime" placeholder="Start Time" formControlName="startTime">
+      <ngx-material-timepicker-toggle [for]="startTime"></ngx-material-timepicker-toggle>
+      <ngx-material-timepicker #startTime [enableKeyboardInput]="true" (timeSet)="timeChanged()"></ngx-material-timepicker>
 
-    <input [ngxTimepicker]="endTime" placeholder="End Time" formControlName="endTime">
-    <ngx-material-timepicker-toggle [for]="endTime"></ngx-material-timepicker-toggle>
-    <ngx-material-timepicker #endTime [enableKeyboardInput]="true"></ngx-material-timepicker>
+
+      <input [ngxTimepicker]="endTime" placeholder="End Time" formControlName="endTime">
+      <ngx-material-timepicker-toggle [for]="endTime"></ngx-material-timepicker-toggle>
+      <ngx-material-timepicker #endTime [enableKeyboardInput]="true"></ngx-material-timepicker>
+    </div>
 
 
     <mat-form-field>

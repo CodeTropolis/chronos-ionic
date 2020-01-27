@@ -45,19 +45,23 @@ export class HomePage implements OnInit {
   }
 
   eventDrop(e) {
-    // Must format, otherwise e.event.start will save as
-    // Month DD YYYY at 2:00:00 PM UTC-6 which calendar will not recognize
-    const start = this.formatDate(e.event.start);
-    const end = this.formatDate(e.event.end);
+    // console.log(`MD: HomePage -> eventDrop -> e`, e);
+    // Must format start and end props, otherwise e.event.start will save as
+    // Month DD YYYY at 2:00:00 PM UTC-6 which calendar will not recognize as currently configured (?)
+    const sTime = e.event.start.getHours() + ':' + e.event.start.getMinutes();
+    const start = this.formatDateTime(e.event.start, sTime); // i.e. grab 14:00 from e.event.start
+    console.log(`MD: HomePage -> eventDrop -> start`, start);
+    const eTime = e.event.end.getHours() + ':' + e.event.end.getMinutes();
+    const end = this.formatDateTime(e.event.end, eTime);
+    console.log(`MD: HomePage -> eventDrop -> end`, end);
     const updatedEvent = {
       start,
       end,
-      startStr: moment(e.event.start).format('YYYY-MM-DD') // For Queries
     };
     this.firebaseService.eventsCollection.doc(e.event.extendedProps.docId).update(updatedEvent);
   }
 
-  eventRender(e){
+  eventRender(e) {
     // const eventEl = e.el.querySelector('.fc-content');
     // const linkIcon = document.createElement('i');
     // // if user = admin.
@@ -87,9 +91,9 @@ export class HomePage implements OnInit {
   }
 
   formatDateTime(date: string, time) {
-    const mTime = moment(time, ['h:mm A']).format('HH:mm');
+    // const mTime = moment(time, ['h:mm A']).format('HH:mm');
     const fDate = moment(date).format('YYYY-MM-DD');
-    const dateTime = moment(fDate + ' ' + mTime, 'YYYY/MM/DD HH:mm');
+    const dateTime = moment(fDate + ' ' + time, 'YYYY/MM/DD HH:mm');
     const dtf = dateTime.format('YYYY-MM-DDTHH:mm');
     return dtf;
   }

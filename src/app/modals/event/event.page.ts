@@ -16,6 +16,7 @@ export class EventPage implements OnInit {
   @Input() arg: any;
   @Input() isSelectingDays: boolean;
   eventForm: FormGroup;
+  showWarning: boolean;
 
   types = [
     {value: 'private_party', display: 'Private Party', bgColor: '#3dc6ab'},
@@ -61,7 +62,6 @@ export class EventPage implements OnInit {
   }
 
   private populateForm(arg) {
-    this.dateIsAvailable(this.arg);
     if (!this.isSelectingDays) {
       const event = arg.event;
       // Switch from 24 hr format to format that the time picker will accept.
@@ -81,6 +81,7 @@ export class EventPage implements OnInit {
       };
       this.eventForm.patchValue(full);
     } else {
+      this.checkForEvents(this.arg);
       const minusOneDay = moment(arg.end).subtract(1, 'days').format('YYYY-MM-DDT06:00:00.000Z');
       const onlyDates = {
         startDate: arg.start,
@@ -105,7 +106,10 @@ export class EventPage implements OnInit {
       backgroundColor: formValue.type.bgColor,
       location: formValue.location,
       allDay: false,
-      startStr: moment(formValue.startDate).format('YYYY-MM-DD') // For Queries
+      // The following props are for queries for dateIsAvailable().
+      startStr: moment(formValue.startDate).format('YYYY-MM-DD'),
+      sTime: formValue.startTime, // Do not use startTime else will populate every day.
+      eTime: formValue.endTime,
     };
     // If an event is clicked, the event handler from home.page will pass in isSelectingDays as false
     if (!this.isSelectingDays) {
@@ -122,23 +126,26 @@ export class EventPage implements OnInit {
     }
   }
 
-  dateIsAvailable(arg): boolean {
+  checkForEvents(arg) {
     // console.log(`MD: EventPage -> arg`, arg);
+    // const selectionStartDate = arg.start.getDate();
+    // console.log(`MD: EventPage -> selectionStartDate`, selectionStartDate);
+
+
     // Query events based on starting date of selected date range
     // If an event is scheduled on the same date on the same location,
     // the starting must be 30 min after the end of the last event.
 
-    // const eventsRef = this.firebaseService.eventsCollection.ref;
-    // const query = eventsRef.where('startStr', '==', arg.startStr)
-    //   .get()
-    //   .then(querySnapshot => {
-    //     querySnapshot.forEach(doc => {
-    //       console.log(doc.data());
-    //     });
-    //   }).catch(error => {
-    //     console.log('Error getting documents: ', error);
-    // });
-    return true;
+    const eventsRef = this.firebaseService.eventsCollection.ref;
+    const query = eventsRef.where('startStr', '==', arg.startStr)
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          console.log(`Existing event: `, doc.data());
+        });
+      }).catch(error => {
+        console.log('Error getting documents: ', error);
+    });
   }
 
   // https://stackoverflow.com/a/51121933
@@ -160,6 +167,12 @@ export class EventPage implements OnInit {
     if (formDirective) { formDirective.resetForm(); }
     this.eventForm.reset();
     this.dismiss();
+  }
+
+  timeChanged() {
+    setTimeout(() => {
+      console.log(`MD: EventPage -> timeChanged -> this.eventForm.value`, this.eventForm.value);
+    }, 250);
   }
 
   dismiss() {

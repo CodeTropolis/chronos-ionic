@@ -4,3 +4,8 @@ mat-form-field {
 }
 
 ion-button {display: block;}
+
+div.timePicker {
+    display: flex;
+    ngx-material-timepicker-toggle {margin-right:20px;}
+}
