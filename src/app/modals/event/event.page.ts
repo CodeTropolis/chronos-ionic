@@ -20,23 +20,17 @@ export class EventPage implements OnInit {
 
   types = [
     {value: 'private_party', display: 'Private Party', bgColor: '#3dc6ab'},
-    {value: 'sports', display: 'Sports', bgColor: '#ea6759'},
-    {value: 'st_luke', display: 'St. Luke', bgColor: '#aa72c1'},
-    {value: 'st_teresa_parish', display: 'St. Teresa Parish', bgColor: '#53a7e0'},
-    {value: 'school_event', display: 'St. Teresa School Event', bgColor: '#f4ab36'},
+    {value: 'sports', display: 'Sports Event', bgColor: '#ea6759'},
+    {value: 'budget_meeting', display: 'Budget Meeting', bgColor: '#aa72c1'},
+    {value: 'school_event', display: 'School Event', bgColor: '#f4ab36'},
   ];
 
   locations = [
-    {value: 'st_luke_church', display: 'St. Luke Church'},
-    {value: 'st_luke_community_house', display: 'St. Luke Community House'},
-    {value: 'st_luke_parish_center', display: 'St. Luke Parish Center'},
-    {value: 'st_luke_room', display: 'St. Luke Room'},
-    {value: 'st_teresa_church', display: 'St. Teresa Church'},
-    {value: 'st_teresa_cafeteria', display: 'St. Teresa Cafeteria'},
-    {value: 'st_teresa_parish_center', display: 'St. Teresa Parish Center'},
-    {value: 'st_teresa_rectory', display: 'St. Teresa Rectory'},
-    {value: 'st_teresa_school', display: 'St. Teresa School'},
-    {value: 'st_teresa_school_gym', display: 'St. Teresa School Gym'},
+    {value: 'main', display: 'Main Building'},
+    {value: 'annex_east', display: 'Annex East'},
+    {value: 'cafeteria', display: 'Cafeteria'},
+    {value: 'school', display: 'School'},
+    {value: 'gym', display: 'School Gym'},
   ];
   currentEventDocId: string;
 
